@@ -1,2 +1,1 @@
-/** Features layer — slice placeholders for upcoming UI-only flows. */
-export {};
+export { LoginForm, RegisterForm } from "./auth";
