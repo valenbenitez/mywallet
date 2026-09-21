@@ -270,6 +270,48 @@ export class CircleService implements OnModuleInit {
     }
     return env.usdcTokenIdEth;
   }
+
+  /**
+   * Fetches the asymmetric public key used to verify webhook signatures.
+   * @see https://developers.circle.com/wallets/webhook-notifications
+   */
+  async getNotificationPublicKey(keyId: string): Promise<{
+    id: string;
+    algorithm: string;
+    publicKey: string;
+  }> {
+    const { apiKey } = loadCircleClientCredentials();
+    try {
+      const response = await fetch(
+        `https://api.circle.com/v2/notifications/publicKey/${encodeURIComponent(keyId)}`,
+        {
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+          },
+        },
+      );
+      if (!response.ok) {
+        throw new Error(
+          `Circle publicKey lookup failed: ${response.status} ${response.statusText}`,
+        );
+      }
+      const json = (await response.json()) as {
+        data?: { id?: string; algorithm?: string; publicKey?: string };
+      };
+      const data = json.data;
+      if (!data?.id || !data.algorithm || !data.publicKey) {
+        throw new Error('Circle publicKey response missing fields');
+      }
+      return {
+        id: data.id,
+        algorithm: data.algorithm,
+        publicKey: data.publicKey,
+      };
+    } catch (error) {
+      mapCircleError(error);
+    }
+  }
 }
 
 function mapFeeLevel(
