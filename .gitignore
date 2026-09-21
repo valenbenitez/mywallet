@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# env & secrets
+.env
+.env.*
+!.env.example
+*.pem
+entity-secret*
+recovery*.json
+
+# build / framework
+.next/
+out/
+build/
+dist/
+coverage/
+*.tsbuildinfo
+
+# debug / OS
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# vercel / local tooling
+.vercel
