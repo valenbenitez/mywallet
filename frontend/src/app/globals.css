@@ -1,26 +1,188 @@
 @import "tailwindcss";
 
+/*
+ * Portrait tokens (DESIGN.md).
+ * next/font injects --font-switzer-face / --font-basier-circle-face on <html>.
+ * Substitutes: Switzer→Manrope, Basier Circle→Plus Jakarta Sans (see shared/config/fonts.ts).
+ */
+@theme {
+  /* Colors */
+  --color-portrait-ink: #08304c;
+  --color-nautical-teal: #084e72;
+  --color-rainbow-spectrum: #26c0ff;
+  --color-lavender-violet: #8e51ff;
+  --color-cobalt-pop: #3b82f6;
+  --color-grape-vibrant: #ad46ff;
+  --color-cherry-red: #ff4940;
+  --color-tangerine-warm: #ffa130;
+  --color-sunflower-yellow: #ffc837;
+  --color-leaf-green: #00cc3d;
+  --color-charcoal-outline: #353535;
+  --color-graphite-body: #2c2c2c;
+  --color-slate-helper: #797979;
+  --color-iron-quiet: #585858;
+  --color-ash-divider: #dedede;
+  --color-fog-edge: #c7c7c7;
+  --color-mist-hairline: #eeeeee;
+  --color-white-canvas: #ffffff;
+  --color-mint-wash: #d7ffe2;
+  --color-sky-wash: #e8f1ff;
+  --color-peach-wash: #ffebd6;
+
+  /* Typography */
+  --font-switzer:
+    var(--font-switzer-face), ui-sans-serif, system-ui, sans-serif;
+  --font-basier-circle:
+    var(--font-basier-circle-face), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-switzer-face), ui-sans-serif, system-ui, sans-serif;
+
+  --text-caption: 10px;
+  --text-body: 16px;
+  --text-body-lg: 18px;
+  --text-subheading: 20px;
+  --text-heading-sm: 31px;
+  --text-heading: 44px;
+  --text-heading-lg: 49px;
+  --text-display: 76px;
+
+  /* Spacing (4px base) */
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-28: 28px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-56: 56px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-128: 128px;
+  --spacing-144: 144px;
+  --spacing-160: 160px;
+
+  /* Radii */
+  --radius-nav: 28px;
+  --radius-buttons: 28px;
+  --radius-cards: 24px;
+  --radius-images: 24px;
+  --radius-inputs: 16px;
+  --radius-tags: 9999px;
+
+  /* Shadows */
+  --shadow-md:
+    rgba(0, 0, 0, 0.03) 0px 16px 16px -8px, rgba(0, 0, 0, 0.03) 0px 10px 10px -5px,
+    rgba(0, 0, 0, 0.03) 0px 5px 5px -2.5px, rgba(0, 0, 0, 0.03) 0px 3px 3px -1.5px,
+    rgba(0, 0, 0, 0.03) 0px 2px 2px -1px, rgba(0, 0, 0, 0.03) 0px 1px 1px -0.5px;
+  --shadow-subtle:
+    oklab(0 0 0 / 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.03) 0px 16px 16px -8px,
+    rgba(0, 0, 0, 0.03) 0px 10px 10px -5px, rgba(0, 0, 0, 0.03) 0px 5px 5px -2.5px,
+    rgba(0, 0, 0, 0.03) 0px 3px 3px -1.5px, rgba(0, 0, 0, 0.03) 0px 2px 2px -1px,
+    rgba(0, 0, 0, 0.03) 0px 1px 1px -0.5px;
+  --shadow-subtle-2:
+    oklab(0 0 0 / 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.03) 0px 16px 16px -8px,
+    rgba(0, 0, 0, 0.03) 0px 10px 10px -5px, rgba(0, 0, 0, 0.03) 0px 5px 5px -2.5px,
+    rgba(0, 0, 0, 0.03) 0px 3px 3px -1.5px, rgba(0, 0, 0, 0.03) 0px 2px 2px -1px,
+    rgba(0, 0, 0, 0.03) 0px 1px 1px -0.5px;
+  --shadow-subtle-3:
+    oklab(0 0 0 / 0.06) 0px 0px 0px 1px, rgba(0, 0, 0, 0.07) 0px 20px 20px -10px,
+    rgba(0, 0, 0, 0.04) 0px 10px 10px -5px, rgba(0, 0, 0, 0.03) 0px 5px 5px -2.5px,
+    rgba(0, 0, 0, 0.03) 0px 3px 3px -1.5px, rgba(0, 0, 0, 0.03) 0px 2px 2px -1px,
+    rgba(0, 0, 0, 0.03) 0px 1px 1px -0.5px;
+  --shadow-subtle-4:
+    oklab(0 0 0 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 10px 16px 14px 0px;
+  --shadow-subtle-5: oklab(0 0 0 / 0.1) 0px 0px 0px 1px;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --gradient-rainbow-spectrum: linear-gradient(
+    90deg,
+    #26c0ff,
+    #e600c2 20%,
+    #ff4940 40%,
+    #ffa130 60%,
+    #ffc837 80%,
+    #00cc3d
+  );
+  --leading-caption: 1.5;
+  --tracking-caption: 1.4px;
+  --leading-body: 1.5;
+  --tracking-body: 0px;
+  --leading-body-lg: 1.45;
+  --tracking-body-lg: 0px;
+  --leading-subheading: 1.43;
+  --tracking-subheading: -0.26px;
+  --leading-heading-sm: 1.1;
+  --tracking-heading-sm: -0.4px;
+  --leading-heading: 1.08;
+  --tracking-heading: -1.15px;
+  --leading-heading-lg: 1.04;
+  --tracking-heading-lg: -1.96px;
+  --leading-display: 1;
+  --tracking-display: -4.25px;
+  --page-max-width: 1200px;
+  --section-gap: 80px;
+  --card-padding: 16px;
+  --element-gap: 16px;
+  --spacing-unit: 4px;
+  --surface-canvas: #ffffff;
+  --surface-card: #ffffff;
+  --surface-sticky-nav: #ffffff;
+  --surface-tinted-wash: #e8f1ff;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-white-canvas);
+  color: var(--color-portrait-ink);
+  font-family: var(--font-switzer);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  font-feature-settings: "liga" 0;
+}
+
+/* Portrait rainbow accents — one CTA border + one italic word + tiny brand swatch */
+.rainbow-outline {
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(var(--color-white-canvas), var(--color-white-canvas))
+      padding-box,
+    var(--gradient-rainbow-spectrum) border-box;
+}
+
+.rainbow-text-fill {
+  overflow: visible;
+  background-image: var(--gradient-rainbow-spectrum);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.rainbow-swatch {
+  background-image: var(--gradient-rainbow-spectrum);
+}
+
+/* Soft sky wash that follows --spotlight-x / --spotlight-y (set by PointerSpotlight). */
+.pointer-spotlight {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--color-white-canvas);
+  background-image: radial-gradient(
+    42rem circle at var(--spotlight-x, 50%) var(--spotlight-y, 32%),
+    color-mix(in srgb, var(--color-sky-wash) 70%, transparent) 0%,
+    color-mix(in srgb, var(--color-mint-wash) 28%, transparent) 28%,
+    transparent 58%
+  );
+  background-repeat: no-repeat;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pointer-spotlight {
+    background-image: radial-gradient(
+      36rem circle at 50% 32%,
+      color-mix(in srgb, var(--color-sky-wash) 55%, transparent) 0%,
+      transparent 55%
+    );
+  }
 }
