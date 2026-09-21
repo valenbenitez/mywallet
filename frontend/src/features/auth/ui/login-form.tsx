@@ -17,7 +17,7 @@ export function LoginForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex max-w-[400px] flex-col gap-[var(--spacing-16)]"
+      className="flex w-full flex-col gap-[var(--spacing-16)]"
       noValidate
     >
       <AuthTextField

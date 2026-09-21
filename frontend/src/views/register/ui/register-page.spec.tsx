@@ -46,20 +46,27 @@ describe("RegisterPage", () => {
     expect(confirm).toHaveClass("rounded-[var(--radius-inputs)]");
   });
 
-  it("has one rainbow pill CTA and a link to login", () => {
+  it("has FloatingPillNav and a form rainbow CTA plus links to login", () => {
     render(<RegisterPage />);
+
+    expect(
+      screen.getByRole("navigation", { name: "Primary" }),
+    ).toBeInTheDocument();
 
     const submit = screen.getByRole("button", { name: "Create account" });
     expect(submit).toHaveAttribute("type", "submit");
     expect(submit).toHaveClass("rainbow-outline");
     expect(submit).toHaveClass("rounded-[var(--radius-buttons)]");
-    expect(document.querySelectorAll(".rainbow-outline")).toHaveLength(1);
+    // Nav Sign up + form Create account
+    expect(document.querySelectorAll(".rainbow-outline")).toHaveLength(2);
 
-    expect(screen.getByRole("link", { name: "Login" })).toHaveAttribute(
-      "href",
-      "/login",
-    );
+    const loginLinks = screen.getAllByRole("link", { name: "Login" });
+    expect(loginLinks.length).toBeGreaterThanOrEqual(1);
+    for (const link of loginLinks) {
+      expect(link).toHaveAttribute("href", "/login");
+    }
   });
+
 
   it("mock submit navigates to dashboard without API calls", async () => {
     const user = userEvent.setup();
@@ -77,7 +84,7 @@ describe("RegisterPage", () => {
     fetchSpy.mockRestore();
   });
 
-  it("shows brand, Register heading, and custodial wallet copy", () => {
+  it("shows brand in nav, Register heading, and custodial wallet copy", () => {
     render(<RegisterPage />);
 
     expect(screen.getByText(BRAND_NAME)).toBeInTheDocument();
@@ -88,4 +95,30 @@ describe("RegisterPage", () => {
       screen.getByText(/virtual custodial wallet/i),
     ).toBeInTheDocument();
   });
+
+  it("centers auth layout under FloatingPillNav and hides Stub badge", () => {
+    const { container } = render(<RegisterPage />);
+
+    const root = container.firstChild as HTMLElement;
+    expect(root).toHaveClass("flex", "min-h-full", "flex-1");
+
+    expect(
+      screen.getByRole("navigation", { name: "Primary" }),
+    ).toBeInTheDocument();
+
+    const column = root.children[1] as HTMLElement;
+    expect(column).toHaveClass(
+      "mx-auto",
+      "max-w-[420px]",
+      "justify-center",
+      "w-full",
+    );
+
+    expect(screen.queryByText("Stub")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toHaveClass(
+      "rounded-[var(--radius-inputs)]",
+    );
+  });
 });
+
+

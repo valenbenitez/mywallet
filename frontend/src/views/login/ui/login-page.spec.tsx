@@ -43,20 +43,27 @@ describe("LoginPage", () => {
     expect(password).toHaveClass("rounded-[var(--radius-inputs)]");
   });
 
-  it("has one rainbow pill CTA and a link to register", () => {
+  it("has FloatingPillNav and a form rainbow CTA plus links to register", () => {
     render(<LoginPage />);
+
+    expect(
+      screen.getByRole("navigation", { name: "Primary" }),
+    ).toBeInTheDocument();
 
     const submit = screen.getByRole("button", { name: "Sign in" });
     expect(submit).toHaveAttribute("type", "submit");
     expect(submit).toHaveClass("rainbow-outline");
     expect(submit).toHaveClass("rounded-[var(--radius-buttons)]");
-    expect(document.querySelectorAll(".rainbow-outline")).toHaveLength(1);
+    // Nav Sign up + form Sign in
+    expect(document.querySelectorAll(".rainbow-outline")).toHaveLength(2);
 
-    expect(screen.getByRole("link", { name: "Sign up" })).toHaveAttribute(
-      "href",
-      "/register",
-    );
+    const signUpLinks = screen.getAllByRole("link", { name: "Sign up" });
+    expect(signUpLinks.length).toBeGreaterThanOrEqual(1);
+    for (const link of signUpLinks) {
+      expect(link).toHaveAttribute("href", "/register");
+    }
   });
+
 
   it("mock submit navigates to dashboard without API calls", async () => {
     const user = userEvent.setup();
@@ -73,7 +80,7 @@ describe("LoginPage", () => {
     fetchSpy.mockRestore();
   });
 
-  it("shows brand, Login heading, and custodial copy", () => {
+  it("shows brand in nav, Login heading, and custodial copy", () => {
     render(<LoginPage />);
 
     expect(screen.getByText(BRAND_NAME)).toBeInTheDocument();
@@ -84,4 +91,30 @@ describe("LoginPage", () => {
       screen.getByText(/custodial account/i),
     ).toBeInTheDocument();
   });
+
+  it("centers auth layout under FloatingPillNav and hides Stub badge", () => {
+    const { container } = render(<LoginPage />);
+
+    const root = container.firstChild as HTMLElement;
+    expect(root).toHaveClass("flex", "min-h-full", "flex-1");
+
+    expect(
+      screen.getByRole("navigation", { name: "Primary" }),
+    ).toBeInTheDocument();
+
+    const column = root.children[1] as HTMLElement;
+    expect(column).toHaveClass(
+      "mx-auto",
+      "max-w-[420px]",
+      "justify-center",
+      "w-full",
+    );
+
+    expect(screen.queryByText("Stub")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toHaveClass(
+      "rounded-[var(--radius-inputs)]",
+    );
+  });
 });
+
+

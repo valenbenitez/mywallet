@@ -19,5 +19,7 @@ describe("PageShell", () => {
       "bg-white-canvas",
       "text-portrait-ink",
     );
+    expect(screen.getByText("Stub")).toBeInTheDocument();
   });
 });
+
