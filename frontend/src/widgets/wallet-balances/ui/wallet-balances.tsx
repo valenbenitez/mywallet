@@ -1,10 +1,5 @@
-import {
-  CHAIN_LABELS,
-  getMockDepositAddress,
-  getMockUsdcBalances,
-  mockWallet,
-  truncateAddress,
-} from "@/entities/wallet";
+import { CHAIN_LABELS, truncateAddress } from "@/entities/wallet";
+import type { ChainUsdcBalance } from "@/features/wallets";
 import { GhostTextLink } from "@/shared/ui/ghost-text-link";
 
 const CARD_WASH: Record<string, string> = {
@@ -12,10 +7,12 @@ const CARD_WASH: Record<string, string> = {
   "ETH-SEPOLIA": "bg-peach-wash",
 };
 
-/** Dual-chain USDC portfolio cards with truncated deposit address per chain. */
-export function WalletBalances() {
-  const balances = getMockUsdcBalances(mockWallet);
+type WalletBalancesProps = {
+  balances: ChainUsdcBalance[];
+};
 
+/** Dual-chain USDC portfolio cards with truncated deposit address per chain. */
+export function WalletBalances({ balances }: WalletBalancesProps) {
   return (
     <section
       aria-label="Balances"
@@ -35,14 +32,12 @@ export function WalletBalances() {
 
       <div className="grid grid-cols-2 gap-[var(--spacing-12)]">
         {balances.map((balance) => {
-          const truncated = truncateAddress(
-            getMockDepositAddress(balance.chain, mockWallet),
-          );
+          const truncated = truncateAddress(balance.address);
           const wash = CARD_WASH[balance.chain] ?? "bg-white-canvas";
 
           return (
             <article
-              key={balance.chain}
+              key={balance.walletId}
               className={`flex flex-col gap-[var(--spacing-8)] rounded-[var(--radius-cards)] p-[var(--spacing-16)] ${wash}`}
             >
               <div className="flex items-center gap-[var(--spacing-8)]">

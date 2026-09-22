@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import { CHAIN_LABELS } from "@/entities/wallet";
 import {
-  CHAIN_LABELS,
-  getMockDepositAddress,
-  mockWallet,
-} from "@/entities/wallet";
+  depositAddressForChain,
+  useWallets,
+} from "@/features/wallets";
 import { RainbowOutlineCta } from "@/shared/ui/rainbow-outline-cta";
 import {
   RECEIVE_CHAINS,
@@ -14,13 +14,19 @@ import {
   type ReceiveChain,
 } from "../model/types";
 
-/** Chain tabs + QR + full address + copy (mock deposit, no API). */
+/** Chain tabs + QR + full address + copy from live wallets. */
 export function ReceiveFlow() {
+  const walletsState = useWallets();
   const [chain, setChain] = useState<ReceiveChain>("MATIC-AMOY");
   const [copied, setCopied] = useState(false);
-  const address = getMockDepositAddress(chain, mockWallet);
+
+  const address =
+    walletsState.status === "success"
+      ? depositAddressForChain(walletsState.wallets, chain)
+      : null;
 
   async function handleCopy() {
+    if (address == null) return;
     try {
       await navigator.clipboard.writeText(address);
       setCopied(true);
@@ -28,6 +34,39 @@ export function ReceiveFlow() {
     } catch {
       setCopied(false);
     }
+  }
+
+  if (walletsState.status === "loading") {
+    return (
+      <p
+        role="status"
+        className="font-switzer text-[length:var(--text-body)] text-slate-helper"
+      >
+        Loading wallets…
+      </p>
+    );
+  }
+
+  if (walletsState.status === "error") {
+    return (
+      <p
+        role="alert"
+        className="font-switzer text-[length:var(--text-body)] text-cherry-red"
+      >
+        {walletsState.message}
+      </p>
+    );
+  }
+
+  if (walletsState.status === "empty") {
+    return (
+      <p
+        role="status"
+        className="font-switzer text-[length:var(--text-body)] text-slate-helper"
+      >
+        No wallets yet. Complete signup to create your deposit addresses.
+      </p>
+    );
   }
 
   return (
@@ -70,38 +109,49 @@ export function ReceiveFlow() {
         aria-labelledby={`receive-tab-${chain}`}
         className="flex flex-col gap-[var(--spacing-16)]"
       >
-        <div
-          data-testid="receive-qr"
-          data-address={address}
-          role="img"
-          aria-label={`QR code for ${address}`}
-          className="flex items-center justify-center self-start rounded-[var(--radius-cards)] border border-mist-hairline bg-white-canvas p-[var(--spacing-16)]"
-        >
-          <QRCodeSVG value={address} size={180} level="M" />
-        </div>
-
-        <div className="flex flex-col gap-[var(--spacing-8)]">
-          <p className="font-switzer text-[length:var(--text-body)] font-medium text-portrait-ink">
-            Deposit address
-          </p>
+        {address == null ? (
           <p
-            data-testid="receive-address"
-            className="break-all font-switzer text-[length:var(--text-body)] text-portrait-ink"
+            role="status"
+            className="font-switzer text-[length:var(--text-body)] text-slate-helper"
           >
-            {address}
+            No deposit address for {CHAIN_LABELS[chain]} yet.
           </p>
-          <p className="font-switzer text-[length:var(--text-caption)] text-slate-helper">
-            {RECEIVE_NETWORK_HINTS[chain]}
-          </p>
-        </div>
+        ) : (
+          <>
+            <div
+              data-testid="receive-qr"
+              data-address={address}
+              role="img"
+              aria-label={`QR code for ${address}`}
+              className="flex items-center justify-center self-start rounded-[var(--radius-cards)] border border-mist-hairline bg-white-canvas p-[var(--spacing-16)]"
+            >
+              <QRCodeSVG value={address} size={180} level="M" />
+            </div>
 
-        <RainbowOutlineCta
-          type="button"
-          onClick={handleCopy}
-          className="w-full max-w-[280px]"
-        >
-          {copied ? "Copied" : "Copy address"}
-        </RainbowOutlineCta>
+            <div className="flex flex-col gap-[var(--spacing-8)]">
+              <p className="font-switzer text-[length:var(--text-body)] font-medium text-portrait-ink">
+                Deposit address
+              </p>
+              <p
+                data-testid="receive-address"
+                className="break-all font-switzer text-[length:var(--text-body)] text-portrait-ink"
+              >
+                {address}
+              </p>
+              <p className="font-switzer text-[length:var(--text-caption)] text-slate-helper">
+                {RECEIVE_NETWORK_HINTS[chain]}
+              </p>
+            </div>
+
+            <RainbowOutlineCta
+              type="button"
+              onClick={handleCopy}
+              className="w-full max-w-[280px]"
+            >
+              {copied ? "Copied" : "Copy address"}
+            </RainbowOutlineCta>
+          </>
+        )}
       </div>
     </div>
   );
