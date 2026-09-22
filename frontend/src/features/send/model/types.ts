@@ -1,4 +1,7 @@
 import type { WalletBalance } from "@/entities/wallet";
+import type { TransactionPublic } from "@/features/transactions";
+
+export type { TransactionPublic };
 
 export type SendChain = WalletBalance["chain"];
 
@@ -33,21 +36,6 @@ export type EstimateFeeBody = {
 export type CreateTransferBody = EstimateFeeBody & {
   feeLevel: FeeLevel;
   idempotencyKey: string;
-};
-
-export type TransactionPublic = {
-  id: string;
-  walletId: string;
-  direction: string;
-  blockchain: string;
-  tokenSymbol: string;
-  amount: string;
-  sourceAddress: string;
-  destinationAddress: string;
-  state: string;
-  txHash: string | null;
-  networkFee: string | null;
-  createdAt: string;
 };
 
 export type CreateTransferResponse = {
