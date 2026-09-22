@@ -1,7 +1,12 @@
 import { GhostTextLink } from "@/shared/ui/ghost-text-link";
+import type { TransactionPublic } from "../model/types";
 
-/** Step 3: mock success + link to transactions. */
-export function SendSuccess() {
+type SendSuccessProps = {
+  transaction: TransactionPublic;
+};
+
+/** Step 3: created transfer id + initial async state. */
+export function SendSuccess({ transaction }: SendSuccessProps) {
   return (
     <div
       aria-label="Transfer submitted"
@@ -12,12 +17,28 @@ export function SendSuccess() {
           Status
         </p>
         <p className="mt-[var(--spacing-8)] font-switzer text-[length:var(--text-body-lg)] font-medium text-portrait-ink">
-          Transfer submitted
+          {transaction.state}
         </p>
         <p className="mt-[var(--spacing-8)] font-switzer text-[length:var(--text-body)] text-slate-helper">
-          Your USDC send is queued. Status updates will appear in activity once
-          wired to Circle webhooks.
+          Transfer created. Status will update in activity as Circle webhooks
+          arrive.
         </p>
+        <dl className="mt-[var(--spacing-16)] flex flex-col gap-[var(--spacing-12)] font-switzer text-[length:var(--text-body)]">
+          <div className="flex flex-col gap-[var(--spacing-4)]">
+            <dt className="text-[length:var(--text-caption)] font-semibold uppercase tracking-[0.14em] text-slate-helper">
+              Transaction ID
+            </dt>
+            <dd className="break-all text-portrait-ink">{transaction.id}</dd>
+          </div>
+          <div className="flex flex-col gap-[var(--spacing-4)]">
+            <dt className="text-[length:var(--text-caption)] font-semibold uppercase tracking-[0.14em] text-slate-helper">
+              Amount
+            </dt>
+            <dd className="text-portrait-ink">
+              {transaction.amount} {transaction.tokenSymbol}
+            </dd>
+          </div>
+        </dl>
       </article>
 
       <GhostTextLink href="/transactions">View transactions</GhostTextLink>

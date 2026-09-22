@@ -1,32 +1,51 @@
 "use client";
 
 import type { FormEvent } from "react";
-import {
-  CHAIN_LABELS,
-  getMockUsdcBalances,
-  mockWallet,
-  type WalletBalance,
-} from "@/entities/wallet";
+import { useState } from "react";
+import { CHAIN_LABELS, type WalletBalance } from "@/entities/wallet";
+import type { ChainUsdcBalance } from "@/features/wallets";
 import { RainbowOutlineCta } from "@/shared/ui/rainbow-outline-cta";
 import type { SendDraft } from "../model/types";
+import { validateSendDraft } from "../model/validation";
 import { SendTextField } from "./send-text-field";
 
 const CHAINS = Object.keys(CHAIN_LABELS) as WalletBalance["chain"][];
 
 type SendFormProps = {
   draft: SendDraft;
+  balances: ChainUsdcBalance[];
+  hasWallet: boolean;
   onChange: (draft: SendDraft) => void;
   onContinue: () => void;
 };
 
-/** Step 1: chain + destination + amount → Continue (mock, no validation UI). */
-export function SendForm({ draft, onChange, onContinue }: SendFormProps) {
-  const balances = getMockUsdcBalances(mockWallet);
+/** Step 1: chain + destination + amount with client min/max validation. */
+export function SendForm({
+  draft,
+  balances,
+  hasWallet,
+  onChange,
+  onContinue,
+}: SendFormProps) {
+  const [error, setError] = useState<string | null>(null);
   const available =
-    balances.find((b) => b.chain === draft.chain)?.amount ?? "0";
+    balances.find((b) => b.chain === draft.chain)?.amount ?? "0.00";
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!hasWallet) {
+      setError("No wallet on this chain yet.");
+      return;
+    }
+    const result = validateSendDraft({
+      destinationAddress: draft.destinationAddress,
+      amount: draft.amount,
+    });
+    if (!result.ok) {
+      setError(result.message);
+      return;
+    }
+    setError(null);
     onContinue();
   }
 
@@ -47,12 +66,13 @@ export function SendForm({ draft, onChange, onContinue }: SendFormProps) {
           id="send-chain"
           name="chain"
           value={draft.chain}
-          onChange={(event) =>
+          onChange={(event) => {
+            setError(null);
             onChange({
               ...draft,
               chain: event.target.value as SendDraft["chain"],
-            })
-          }
+            });
+          }}
           className="rounded-[var(--radius-inputs)] border border-fog-edge bg-white-canvas px-[var(--spacing-16)] py-[12px] font-switzer text-[length:var(--text-body)] text-portrait-ink outline-none focus:border-charcoal-outline"
         >
           {CHAINS.map((chain) => (
@@ -74,9 +94,10 @@ export function SendForm({ draft, onChange, onContinue }: SendFormProps) {
         autoComplete="off"
         placeholder="0x…"
         value={draft.destinationAddress}
-        onChange={(event) =>
-          onChange({ ...draft, destinationAddress: event.target.value })
-        }
+        onChange={(event) => {
+          setError(null);
+          onChange({ ...draft, destinationAddress: event.target.value });
+        }}
         required
       />
 
@@ -89,11 +110,21 @@ export function SendForm({ draft, onChange, onContinue }: SendFormProps) {
         autoComplete="off"
         placeholder="0.00"
         value={draft.amount}
-        onChange={(event) =>
-          onChange({ ...draft, amount: event.target.value })
-        }
+        onChange={(event) => {
+          setError(null);
+          onChange({ ...draft, amount: event.target.value });
+        }}
         required
       />
+
+      {error != null ? (
+        <p
+          role="alert"
+          className="font-switzer text-[length:var(--text-body)] text-cherry-red"
+        >
+          {error}
+        </p>
+      ) : null}
 
       <RainbowOutlineCta type="submit" className="mt-[var(--spacing-8)] w-full">
         Continue

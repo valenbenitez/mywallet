@@ -1,7 +1,7 @@
 import { SendFlow } from "@/features/send";
 import { WalletAppShell } from "@/widgets/wallet-app-shell/ui/wallet-app-shell";
 
-/** Post-login send flow: form → fee preview confirm → success mock. */
+/** Post-login send flow: form → fee estimate → create transfer → success. */
 export function SendPage() {
   return (
     <WalletAppShell title="Send">
