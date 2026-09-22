@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { LogoutButton } from "@/features/auth";
 import { BRAND_NAME } from "@/shared/config/brand";
 import { AppNav } from "@/widgets/app-nav/ui/app-nav";
 
@@ -27,6 +28,9 @@ export function WalletAppShell({
         <p className="font-switzer text-[length:var(--text-body)] font-semibold tracking-[0.025em] text-portrait-ink">
           {BRAND_NAME}
         </p>
+        <div className="ml-auto">
+          <LogoutButton />
+        </div>
       </header>
 
       <main className="mx-auto flex w-full max-w-[480px] flex-1 flex-col gap-[var(--spacing-28)] px-[var(--spacing-20)] pb-[calc(56px+var(--spacing-40)+var(--spacing-16))] pt-[var(--spacing-24)] sm:max-w-[520px]">

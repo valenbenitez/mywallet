@@ -5,7 +5,7 @@ export function LoginPage() {
   return (
     <AuthPageShell
       title="Login"
-      description="Sign in to your My Wallet custodial account — we hold the keys so you can send and receive without seed phrases."
+      description="Sign in to your My Wallet custodial account."
     >
       <LoginForm />
       <p className="font-switzer text-[length:var(--text-body)] text-slate-helper">

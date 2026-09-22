@@ -16,6 +16,7 @@ type RainbowOutlineButtonProps = {
   className?: string;
   type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
   onClick?: ButtonHTMLAttributes<HTMLButtonElement>["onClick"];
+  disabled?: boolean;
 };
 
 type RainbowOutlineCtaProps = RainbowOutlineLinkProps | RainbowOutlineButtonProps;
@@ -32,10 +33,15 @@ export function RainbowOutlineCta(props: RainbowOutlineCtaProps) {
     );
   }
 
-  const { children, type = "button", onClick } = props;
+  const { children, type = "button", onClick, disabled } = props;
 
   return (
-    <button type={type} onClick={onClick} className={className}>
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={`${className}${disabled ? " opacity-50" : ""}`}
+    >
       {children}
     </button>
   );
