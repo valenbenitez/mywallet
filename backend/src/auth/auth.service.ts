@@ -67,14 +67,13 @@ export class AuthService {
     let circleWallets: CircleWalletSummary[];
     try {
       circleWallets = await this.circleService.createWallets({
-        idempotencyKey: `signup-${user.id}`,
+        idempotencyKey: `${user.id}`,
         refId: user.id,
       });
     } catch (error) {
       await this.compensateOrphanUser(user.id);
       throw error;
     }
-
     if (!circleWallets || circleWallets.length < 2) {
       await this.compensateOrphanUser(user.id);
       throw new BadGatewayException({
