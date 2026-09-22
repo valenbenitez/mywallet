@@ -1,11 +1,13 @@
-import { PageShell } from "@/shared/ui/page-shell";
+import { SendFlow } from "@/features/send";
+import { WalletAppShell } from "@/widgets/wallet-app-shell/ui/wallet-app-shell";
 
+/** Post-login send flow: form → fee preview confirm → success mock. */
 export function SendPage() {
   return (
-    <PageShell title="Send">
-      <p className="font-switzer text-[length:var(--text-body)] text-slate-helper">
-        Transfer UI stub — mock happy path only.
-      </p>
-    </PageShell>
+    <WalletAppShell title="Send">
+      <div className="w-full">
+        <SendFlow />
+      </div>
+    </WalletAppShell>
   );
 }
