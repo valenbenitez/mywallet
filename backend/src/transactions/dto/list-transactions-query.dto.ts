@@ -1,3 +1,4 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsIn,
@@ -29,18 +30,22 @@ const STATES = [
 ] as const satisfies readonly TransactionState[];
 
 export class ListTransactionsQueryDto {
+  @ApiPropertyOptional({ format: 'uuid' })
   @IsOptional()
   @IsUUID('4')
   walletId?: string;
 
+  @ApiPropertyOptional({ enum: DIRECTIONS })
   @IsOptional()
   @IsIn([...DIRECTIONS])
   direction?: TransactionDirection;
 
+  @ApiPropertyOptional({ enum: STATES })
   @IsOptional()
   @IsIn([...STATES])
   state?: TransactionState;
 
+  @ApiPropertyOptional({ minimum: 1, maximum: 100, default: 20 })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -48,6 +53,9 @@ export class ListTransactionsQueryDto {
   @Max(100)
   limit?: number = 20;
 
+  @ApiPropertyOptional({
+    description: 'Opaque pagination cursor from a previous response',
+  })
   @IsOptional()
   @IsString()
   cursor?: string;
