@@ -1,4 +1,5 @@
-# Beni Wallet
+# MyWallet
+<img width="332" height="717" alt="image" src="https://github.com/user-attachments/assets/a4228e03-0ad9-4ee6-95b9-5f6bcc9e1f02" />
 
 Custodial embedded wallet demo built on [Circle Developer-Controlled Wallets](https://developers.circle.com/wallets/dev-controlled).
 
